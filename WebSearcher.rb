@@ -57,11 +57,11 @@ class WebSearcher
                 if retries > 0
                 	puts "Retrying #{retries} more times"
                 	retries -= 1
-                	sleep 0.5
+                	sleep 1
                 	retry
               	end
               	else
-              		sleep 0.5 + rand * 1.0
+              		sleep 1.0 + rand * 1.0
               	end
             	end
               rescue ThreadError
