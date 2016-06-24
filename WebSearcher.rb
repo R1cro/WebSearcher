@@ -1,12 +1,11 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
-require 'fileutils'
 require 'csv'
 require 'certified'
-require 'pp'
+#require 'pp'
 require 'open_uri_redirections'
-require 'concurrent'
+#require 'concurrent'
 require 'thread'
 
 CSV_HEADER = %w(Link Count) 	
@@ -43,7 +42,7 @@ class WebSearcher
       workers = (0...5).map do
         Thread.new do
           begin 
-            while p page = work_q.pop('true')
+            while page = work_q.pop('true')
               retries = 1
               begin
                 html = Nokogiri::HTML(open(page, :allow_redirections => :all))
@@ -51,7 +50,7 @@ class WebSearcher
                 preview = html.at('html').inner_text.downcase.scan(/\w+/)
                 words = html.at('html').inner_text.downcase
                 count_term = count_term(words, term.downcase).to_s
-                page + ': ' + count_term + ' found.' 
+                puts page + ': ' + count_term + ' found.' 
                 csv_output << [ page, count_term ] 
               rescue StandardError=>e
                 puts "#{page}: #{e}"
@@ -77,6 +76,10 @@ end #class
 
 web_searcher = WebSearcher.new(ARGV[0])
 web_searcher.save_to_csv
+
+
+
+ 
 
 
 
