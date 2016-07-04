@@ -27,8 +27,7 @@ class WebSearcher
   def find_term(page)
     html = Nokogiri::HTML(open(page, :allow_redirections => :all))
     html.css('script').remove
-    preview = html.at('html').inner_text.scan(/\w+/)
-    words = html.at('html').inner_text
+    words = html.at('html').inner_text.scan(/\w+/).to_s
     @count_term = count_term(words, term).to_s
   end
 
