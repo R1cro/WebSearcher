@@ -4,7 +4,6 @@ require 'csv'
 require 'certified'
 require 'open_uri_redirections'
 require 'thread'
-#require 'pp'
 
 CSV_HEADER = %w(Link Count) 	
 
@@ -16,16 +15,16 @@ class WebSearcher
   	@term = term
   end
 
- #  def frequencies(words) 
- #    Hash[
- #    	 words.group_by(&:downcase).map{ |word,instances|
- #       [word,instances.length]
- #     	 }.sort_by(&:last).reverse
- #    ]
- #  end
-
   def find_term(page)
-    html = Nokogiri::HTML(open(page, :allow_redirections => :all))
+    html = Nokogiri::HTML(open(
+      page, 
+      "User-Agent" => "Ruby/#{RUBY_VERSION}",
+      :proxy => nil, 
+      :allow_redirections => :all, 
+      :read_timeout => 10,
+      :ssl_ca_cert => nil,
+      :ssl_verify_mode => nil
+      ))
     html.css('script').remove
     words = html.css('html').text.scan(/\w+/).to_s
     @count_term = count_term(words, term).to_s
